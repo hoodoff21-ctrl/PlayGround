@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#08070d">
+  <meta name="description" content="Blade Chain — a fruit-slicing duel of steel, timing, and unbroken combos.">
+  <title>Blade Chain — A Fruit-Slicing Duel</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%2309080e'/%3E%3Cpath d='M17 17h30M17 47h30M32 17v30' stroke='%23e9b763' stroke-width='2' opacity='.75'/%3E%3Ccircle cx='32' cy='32' r='10' fill='%23d83f4c' opacity='.75'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-mode="menu">
+  <canvas id="scene" aria-label="Blade Chain game scene"></canvas>
+
+  <div class="atmosphere" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-seal" aria-hidden="true">刃</span>
+      <div class="brand-type">
+        <span class="brand-kicker">RYUJIN DOJO</span>
+        <span class="brand-name">BLADE CHAIN</span>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button class="round-button sound-button" id="soundBtn" type="button" aria-label="Mute sound" title="Sound (M)">
+        <svg class="icon icon-sound" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 9.5h3.2L12 5.6v12.8l-4.8-3.9H4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <path class="sound-wave" d="M15.2 9a4.4 4.4 0 0 1 0 6M18 6.4a8 8 0 0 1 0 11.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <svg class="icon icon-muted" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 9.5h3.2L12 5.6v12.8l-4.8-3.9H4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="m15.5 9.5 5 5m0-5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button class="round-button pause-button" id="pauseBtn" type="button" aria-label="Pause game" title="Pause (P)">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8.5 6.5v11M15.5 6.5v11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <section class="hud" id="hud" aria-label="Game status">
+    <div class="score-panel hud-panel">
+      <span class="hud-label">SCORE</span>
+      <strong class="score-value" id="scoreValue">0</strong>
+    </div>
+
+    <div class="chain-panel" id="chainPanel">
+      <div class="chain-readout">
+        <span class="chain-title">CHAIN</span>
+        <span class="chain-count" id="chainCount">0</span>
+        <span class="chain-multiplier" id="chainMultiplier">×1.0</span>
+      </div>
+      <div class="chain-track" aria-hidden="true">
+        <span class="chain-fill" id="chainFill"></span>
+        <span class="chain-notch" style="left:20%"></span>
+        <span class="chain-notch" style="left:40%"></span>
+        <span class="chain-notch" style="left:60%"></span>
+        <span class="chain-notch" style="left:80%"></span>
+      </div>
+      <div class="chain-meta">
+        <span id="chainStatus">READY</span>
+        <span id="chainTimer">—</span>
+      </div>
+    </div>
+
+    <div class="focus-panel hud-panel">
+      <span class="hud-label">FOCUS</span>
+      <div class="focus-gems" id="focusGems" aria-label="3 focus remaining">
+        <i class="focus-gem"></i>
+        <i class="focus-gem"></i>
+        <i class="focus-gem"></i>
+      </div>
+    </div>
+  </section>
+
+  <div class="combo-banner" id="comboBanner" aria-live="polite">
+    <span class="combo-flare" aria-hidden="true"></span>
+    <strong id="comboBannerTitle">CHAIN ×5</strong>
+    <small id="comboBannerSub">EMBER AWAKENED</small>
+  </div>
+
+  <main class="screens">
+    <section class="screen menu-screen" id="menuScreen">
+      <div class="menu-inner">
+        <div class="menu-kicker">
+          <span class="kicker-rule" aria-hidden="true"></span>
+          THE NIGHT OF FALLING FRUIT
+          <span class="kicker-rule" aria-hidden="true"></span>
+        </div>
+
+        <div class="title-wrap">
+          <span class="title-sun" aria-hidden="true"></span>
+          <p class="title-jp" aria-hidden="true">刃 ・ 連 鎖</p>
+          <h1 class="game-title">
+            <span class="title-blade">BLADE</span>
+            <span class="title-chain">CHAIN</span>
+          </h1>
+          <span class="title-stroke" aria-hidden="true"></span>
+        </div>
+
+        <p class="tagline">One blade. One breath. One unbroken chain.</p>
+
+        <div class="play-cluster">
+          <button class="play-button" id="playBtn" type="button" aria-label="Play">
+            <span class="play-ring" aria-hidden="true"></span>
+            <span class="play-glyph" aria-hidden="true">
+              <svg viewBox="0 0 40 40"><path d="M14 9.5 31 20 14 30.5Z"/></svg>
+            </span>
+          </button>
+          <span class="play-word">PLAY</span>
+        </div>
+
+        <p class="menu-hint">
+          <span>Drag to slash</span>
+          <b aria-hidden="true">•</b>
+          <span>Chain each cut before the ember dies</span>
+          <b aria-hidden="true">•</b>
+          <span>Never touch a bomb</span>
+        </p>
+
+        <div class="menu-records">
+          <span>PERSONAL BEST <strong id="menuBest">0</strong></span>
+          <i aria-hidden="true"></i>
+          <span>LONGEST CHAIN <strong id="menuChain">0</strong></span>
+        </div>
+      </div>
+      <div class="menu-footer">
+        <span>RYUJIN DOJO · EST. 1642</span>
+        <span class="footer-mark" aria-hidden="true">果 物 斬 り</span>
+        <span>SOUND ON FOR THE FULL RITUAL</span>
+      </div>
+    </section>
+
+    <section class="screen pause-screen" id="pauseScreen">
+      <div class="modal pause-modal">
+        <p class="modal-kicker">THE BLADE RESTS</p>
+        <h2 class="modal-title">PAUSED</h2>
+        <p class="modal-copy">The fruit will wait. Your chain will not.</p>
+        <div class="modal-actions">
+          <button class="button button-primary" id="resumeBtn" type="button">Resume</button>
+          <button class="button button-quiet" id="quitBtn" type="button">End run</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen over-screen" id="overScreen">
+      <div class="modal over-modal">
+        <p class="modal-kicker" id="overKicker">THE CHAIN BREAKS</p>
+        <h2 class="modal-title" id="overTitle">RUN ENDED</h2>
+        <p class="modal-copy" id="overReason">A blade is only as sharp as its patience.</p>
+
+        <div class="result-grid">
+          <div class="result-cell result-main">
+            <span>SCORE</span>
+            <strong id="finalScore">0</strong>
+          </div>
+          <div class="result-cell">
+            <span>LONGEST CHAIN</span>
+            <strong id="finalChain">0</strong>
+          </div>
+          <div class="result-cell">
+            <span>FRUIT CUT</span>
+            <strong id="finalCuts">0</strong>
+          </div>
+          <div class="result-cell">
+            <span>BEST</span>
+            <strong id="finalBest">0</strong>
+          </div>
+        </div>
+        <p class="new-record" id="newRecord">NEW PERSONAL BEST</p>
+
+        <div class="modal-actions">
+          <button class="button button-primary" id="againBtn" type="button">Play Again</button>
+          <button class="button button-quiet" id="homeBtn" type="button">Back to dojo</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="side-mark side-mark-left" aria-hidden="true">
+    <span>刃の道</span>
+    <i></i>
+    <small>THE WAY OF THE BLADE</small>
+  </aside>
+  <aside class="side-mark side-mark-right" aria-hidden="true">
+    <small>ONE CUT · ONE LINK</small>
+    <i></i>
+    <span>連鎖</span>
+  </aside>
+
+  <div class="rotate-note" aria-hidden="true">Turn your device upright for the full ritual.</div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

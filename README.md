@@ -1,5 +1,18 @@
 # PlayGround
 
+## ⚔️ Blade Chain
+
+A dependency-free, 2D fruit-slicing duel set in a neon ukiyo-e night dojo. Cut falling fruit, link each cut before the ember dies, and never touch a bomb.
+
+**Play:** drag or swipe across the screen. Taps also slice a single fruit.
+
+- **Focus** — three missed fruit end the run.
+- **Chain** — quick consecutive cuts raise the multiplier and awaken stronger blade tiers.
+- **Bombs** — one touch ends the run instantly.
+- **Controls** — mouse/touch to slash, `P` or `Esc` to pause, `M` to mute.
+
+Built with Canvas 2D, CSS, and ES modules. No build step or dependencies: serve the folder over HTTP and open `index.html`.
+
 <!-- omgithub:readme:start -->
 ## 🚀 Build, play, and remix with OMGithub
 
